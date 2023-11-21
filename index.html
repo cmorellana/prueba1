@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mapa con CircleMarker y cambio de color en Leaflet</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        //var map = L.map('map').setView([51.505, -0.09], 13);
+		// initialize the map on the "map" div with a given center and zoom
+		var map = L.map('map', {
+			center: [-18.469064967337065, -70.30284241343261],
+			zoom: 13
+		});
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        var circleMarker = L.circleMarker([-18.469064967337065, -70.30284241343261], {
+            color: 'black', // Color del borde del marcador
+            fillColor: '#0000FF', // Color inicial del relleno
+            fillOpacity: 0.5, // Opacidad del relleno
+            radius: 10 // Radio del círculo en píxeles
+        }).addTo(map);
+		
+		 map.on('click', onMapClick);
+
+		function onMapClick(click){
+        var coordenada = click.latlng;
+        var latitud = coordenada.lat; // lat  es una propiedad de latlng
+        var longitud = coordenada.lng; // lng también es una propiedad de latlng
+        alert("Acabas de hacer clic en: \n latitud: " + latitud + "\n longitud: " + longitud);
+    };
+
+        function cambiarColor() {
+            var d = new Date();
+            var seconds = d.getSeconds();
+
+            if (seconds < 15) {
+                circleMarker.setStyle({ fillColor: 'red' });
+            } else if (seconds < 30) {
+                circleMarker.setStyle({ fillColor: 'yellow' });
+            } else if (seconds < 45) {
+                circleMarker.setStyle({ fillColor: 'green' });
+            } else {
+                circleMarker.setStyle({ fillColor: 'blue' });
+            }
+
+            setTimeout(cambiarColor, 1000); // Llamar a la función cada segundo
+        }
+
+        cambiarColor();
+    </script>
+</body>
+</html>
